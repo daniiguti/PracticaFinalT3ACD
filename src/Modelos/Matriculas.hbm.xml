@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 03-dic-2022 18:40:23 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelos.Matriculas" table="MATRICULAS" schema="AD_ACADEMIA" optimistic-lock="version">
+        <composite-id name="id" class="Modelos.MatriculasId">
+            <key-property name="ccodalu" type="string">
+                <column name="CCODALU" length="6" />
+            </key-property>
+            <key-property name="ccodcurso" type="string">
+                <column name="CCODCURSO" length="6" />
+            </key-property>
+        </composite-id>
+        <!-- 
+            Lazy(perezoso) si el lazy es igual a true le da "pereza" y por lo tanto no se va a sus hijos/padres
+            
+        -->
+        <many-to-one name="alumnos" class="Modelos.Alumnos" update="false" insert="false" lazy="false" fetch="join">
+            <column name="CCODALU" length="6" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cursos" class="Modelos.Cursos" update="false" insert="false" fetch="join" lazy="false">
+            <column name="CCODCURSO" length="6" not-null="true" />
+        </many-to-one>
+        <property name="nnotamedia" type="short">
+            <column name="NNOTAMEDIA" precision="3" scale="0" not-null="true" />
+        </property>
+        <set name="exameneses" table="EXAMENES" lazy="false" fetch="join" cascade="all" inverse="false">
+            <key>
+                <column name="CCODALU" length="6" not-null="true" />
+                <column name="CCODCURSO" length="6" not-null="true" />
+            </key>
+            <one-to-many class="Modelos.Examenes" />
+        </set>
+    </class>
+</hibernate-mapping>
